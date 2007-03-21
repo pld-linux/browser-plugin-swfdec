@@ -1,7 +1,7 @@
 # TODO
 # - browser plugins v2 (see template-browser-plugin.spec)
 %define		_realname	swfdec-mozilla
-%define		_pluginname	kaffeineplugin
+%define		_pluginname	libswfdecmozilla
 Summary:	Flash player for webbrowsers
 Summary(pl.UTF-8):	Odtwarzacz plików w formacie Flash dla przeglądarek internetowych
 Name:		browser-plugin-swfdec
@@ -11,6 +11,7 @@ License:	GPL
 Group:		X11/Applications/Multimedia
 Source0:	http://swfdec.freedesktop.org/download/swfdec-mozilla/0.4/%{_realname}-%{version}.tar.gz
 # Source0-md5:	55de4eb6d2b7820c56eac3520c8f1734
+Patch0:		%{name}-xulrunner.patch
 URL:		http://swfdec.freedesktop.org/wiki/
 BuildRequires:	swfdec-devel >= 0.4.2
 BuildRequires:	rpmbuild(macros) >= 1.236
@@ -21,7 +22,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_plugindir	%{_libdir}/browser-plugins
 
 # use macro, otherwise extra LF inserted along with the ifarch
-%define	browsers mozilla, mozilla-firefox, mozilla-firefox-bin, konqueror, opera, seamonkey
+%define	browsers xulrunner, mozilla, mozilla-firefox, mozilla-firefox-bin, konqueror, opera, seamonkey
 
 %description
 This package delivers a video/audio player plugin for web browsers.
@@ -36,12 +37,15 @@ Obsługiwane przeglądarki: %{browsers}.
 
 %prep
 %setup -q -n %{_realname}-%{version}
+%patch0 -p1
 
 %build
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoconf}
 %{__automake}
+CPPFLAGS="-I%{_includedir}/xulrunner"
+export CPPFLAGS
 %configure \
 	--disable-static \
 	--prefix=%{_plugindir}
@@ -49,12 +53,19 @@ Obsługiwane przeglądarki: %{browsers}.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_plugindir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+mv $RPM_BUILD_ROOT%{_libdir}/xulrunner/plugins/*.so $RPM_BUILD_ROOT%{_plugindir}
+rm -rf $RPM_BUILD_ROOT%{_libdir}/xulrunner
+
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%triggerin -- xulrunner
+%nsplugin_install -d %{_libdir}/xulrunner/plugins %{_pluginname}.so
 
 %triggerin -- mozilla-firefox
 %nsplugin_install -d %{_libdir}/mozilla-firefox/plugins %{_pluginname}.so
