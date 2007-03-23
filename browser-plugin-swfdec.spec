@@ -1,5 +1,3 @@
-# TODO
-# - browser plugins v2 (see template-browser-plugin.spec)
 %define		_realname	swfdec-mozilla
 %define		_pluginname	libswfdecmozilla
 Summary:	Flash player for webbrowsers
