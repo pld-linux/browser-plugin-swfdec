@@ -13,6 +13,7 @@ Patch0:		%{name}-xulrunner.patch
 URL:		http://swfdec.freedesktop.org/wiki/
 BuildRequires:	swfdec-devel >= 0.4.3
 BuildRequires:	rpmbuild(macros) >= 1.236
+BuildRequires:	xulrunner-devel
 Requires:	browser-plugins(%{_target_base_arch})
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
