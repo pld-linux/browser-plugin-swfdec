@@ -1,5 +1,3 @@
-# TODO
-# - update to browser plugins v2 (see template-browser-plugin.spec)
 %define		_realname	swfdec-mozilla
 %define		_pluginname	libswfdecmozilla
 Summary:	Flash player for webbrowsers
@@ -13,28 +11,23 @@ Source0:	http://swfdec.freedesktop.org/download/swfdec-mozilla/0.4/%{_realname}-
 # Source0-md5:	b2a412a9cd603e6769a402bd0b68451b
 Patch0:		%{name}-xulrunner.patch
 URL:		http://swfdec.freedesktop.org/wiki/
+BuildRequires:	alsa-lib-devel
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool
+BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros) >= 1.357
 BuildRequires:	swfdec-devel >= 0.4.3
-BuildRequires:	rpmbuild(macros) >= 1.236
 BuildRequires:	xulrunner-devel
-Requires:	browser-plugins(%{_target_base_arch})
+Requires:	browser-plugins >= 2.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-# directory where you store the plugin
-%define		_plugindir	%{_libdir}/browser-plugins
-
-# use macro, otherwise extra LF inserted along with the ifarch
-%define	browsers xulrunner, mozilla, mozilla-firefox, mozilla-firefox-bin, konqueror, opera, seamonkey
 
 %description
 This package delivers a video/audio player plugin for web browsers.
 
-Supported browsers: %{browsers}.
-
 %description -l pl.UTF-8
 Ta paczka dostarcza wtyczki odtwarzacza wideo/audio dla przeglądarek
 internetowych.
-
-Obsługiwane przeglądarki: %{browsers}.
 
 %prep
 %setup -q -n %{_realname}-%{version}
@@ -49,65 +42,31 @@ CPPFLAGS="-I%{_includedir}/xulrunner"
 export CPPFLAGS
 %configure \
 	--disable-static \
-	--prefix=%{_plugindir}
+	--prefix=%{_browserpluginsdir}
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_plugindir}
+install -d $RPM_BUILD_ROOT%{_browserpluginsdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-mv $RPM_BUILD_ROOT%{_libdir}/xulrunner/plugins/*.so $RPM_BUILD_ROOT%{_plugindir}
+mv $RPM_BUILD_ROOT%{_libdir}/xulrunner/plugins/*.so $RPM_BUILD_ROOT%{_browserpluginsdir}
 rm -rf $RPM_BUILD_ROOT%{_libdir}/xulrunner
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%triggerin -- xulrunner
-%nsplugin_install -d %{_libdir}/xulrunner/plugins %{_pluginname}.so
+%post
+%update_browser_plugins
 
-%triggerun -- xulrunner
-%nsplugin_uninstall -d %{_libdir}/xulrunner/plugins %{_pluginname}.so
-
-%triggerin -- mozilla-firefox
-%nsplugin_install -d %{_libdir}/mozilla-firefox/plugins %{_pluginname}.so
-
-%triggerun -- mozilla-firefox
-%nsplugin_uninstall -d %{_libdir}/mozilla-firefox/plugins %{_pluginname}.so
-
-%triggerin -- mozilla-firefox-bin
-%nsplugin_install -d %{_libdir}/mozilla-firefox-bin/plugins %{_pluginname}.so
-
-%triggerun -- mozilla-firefox-bin
-%nsplugin_uninstall -d %{_libdir}/mozilla-firefox-bin/plugins %{_pluginname}.so
-
-%triggerin -- mozilla
-%nsplugin_install -d %{_libdir}/mozilla/plugins %{_pluginname}.so
-
-%triggerun -- mozilla
-%nsplugin_uninstall -d %{_libdir}/mozilla/plugins %{_pluginname}.so
-
-%triggerin -- opera
-%nsplugin_install -d %{_libdir}/opera/plugins %{_pluginname}.so
-
-%triggerun -- opera
-%nsplugin_uninstall -d %{_libdir}/opera/plugins %{_pluginname}.so
-
-%triggerin -- konqueror
-%nsplugin_install -d %{_libdir}/kde3/plugins/konqueror %{_pluginname}.so
-
-%triggerun -- konqueror
-%nsplugin_uninstall -d %{_libdir}/kde3/plugins/konqueror %{_pluginname}.so
-
-%triggerin -- seamonkey
-%nsplugin_install -d %{_libdir}/seamonkey/plugins %{_pluginname}.so
-
-%triggerun -- seamonkey
-%nsplugin_uninstall -d %{_libdir}/seamonkey/plugins %{_pluginname}.so
+%postun
+if [ "$1" = 0 ]; then
+	%update_browser_plugins
+fi
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README
-%attr(755,root,root) %{_plugindir}/%{_pluginname}.so
+%attr(755,root,root) %{_browserpluginsdir}/%{_pluginname}.so
