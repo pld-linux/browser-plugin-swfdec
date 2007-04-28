@@ -11,13 +11,12 @@ Source0:	http://swfdec.freedesktop.org/download/swfdec-mozilla/0.4/%{_realname}-
 # Source0-md5:	7d546ac5cc296e58198bb53ccb977021
 Patch0:		%{name}-xulrunner.patch
 URL:		http://swfdec.freedesktop.org/wiki/
-BuildRequires:	alsa-lib-devel
-BuildRequires:	autoconf
-BuildRequires:	automake
+BuildRequires:	autoconf >= 2.58
+BuildRequires:	automake >= 1.6
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.357
-BuildRequires:	swfdec-devel >= 0.4.4
+BuildRequires:	swfdec-gtk-devel >= 0.4.4
 BuildRequires:	xulrunner-devel
 Requires:	browser-plugins >= 2.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
