@@ -1,24 +1,22 @@
-%define		_realname	swfdec-mozilla
-%define		_pluginname	libswfdecmozilla
+%define		realname	swfdec-mozilla
 Summary:	Flash player for webbrowsers
 Summary(pl.UTF-8):	Odtwarzacz plików w formacie Flash dla przeglądarek internetowych
 Name:		browser-plugin-swfdec
-Version:	0.4.4
+Version:	0.4.5
 Release:	1
 License:	GPL
 Group:		X11/Applications/Multimedia
-Source0:	http://swfdec.freedesktop.org/download/swfdec-mozilla/0.4/%{_realname}-%{version}.tar.gz
-# Source0-md5:	7d546ac5cc296e58198bb53ccb977021
-Patch0:		%{name}-xulrunner.patch
+Source0:	http://swfdec.freedesktop.org/download/swfdec-mozilla/0.4/%{realname}-%{version}.tar.gz
+# Source0-md5:	d13f90417ca909d174accd32253fe342
 URL:		http://swfdec.freedesktop.org/wiki/
 BuildRequires:	autoconf >= 2.58
 BuildRequires:	automake >= 1.6
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.357
-BuildRequires:	swfdec-gtk-devel >= 0.4.4
-BuildRequires:	xulrunner-devel
+BuildRequires:	swfdec-gtk-devel = 0.4.5
 Requires:	browser-plugins >= 2.0
+Requires:	swfdec-gtk = 0.4.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -29,30 +27,27 @@ Ta paczka dostarcza wtyczki odtwarzacza wideo/audio dla przeglądarek
 internetowych.
 
 %prep
-%setup -q -n %{_realname}-%{version}
-%patch0 -p1
+%setup -q -n %{realname}-%{version}
 
 %build
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoconf}
+%{__autoheader}
 %{__automake}
-CPPFLAGS="-I%{_includedir}/xulrunner"
-export CPPFLAGS
 %configure \
 	--disable-static \
-	--prefix=%{_browserpluginsdir}
+	--with-plugin-dir=%{_browserpluginsdir}
+
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_browserpluginsdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-mv $RPM_BUILD_ROOT%{_libdir}/xulrunner/plugins/*.so $RPM_BUILD_ROOT%{_browserpluginsdir}
-rm -rf $RPM_BUILD_ROOT%{_libdir}/xulrunner
+rm -f $RPM_BUILD_ROOT%{_browserpluginsdir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,4 +63,4 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README
-%attr(755,root,root) %{_browserpluginsdir}/%{_pluginname}.so
+%attr(755,root,root) %{_browserpluginsdir}/libswfdecmozilla.so
