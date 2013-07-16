@@ -49,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-rm -f $RPM_BUILD_ROOT%{_browserpluginsdir}/*.la
+%{__rm} $RPM_BUILD_ROOT%{_browserpluginsdir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,5 +68,5 @@ fi
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README
 %attr(755,root,root) %{_browserpluginsdir}/libswfdecmozilla.so
-%{_iconsdir}/hicolor/*/*/*.png
-%{_iconsdir}/hicolor/*/*/*.svg
+%{_iconsdir}/hicolor/*/apps/swfdec-mozilla.png
+%{_iconsdir}/hicolor/scalable/apps/swfdec-mozilla.svg
