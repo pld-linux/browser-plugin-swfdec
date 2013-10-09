@@ -2,23 +2,23 @@
 Summary:	Flash player for webbrowsers
 Summary(pl.UTF-8):	Odtwarzacz plików w formacie Flash dla przeglądarek internetowych
 Name:		browser-plugin-swfdec
-Version:	0.8.2
-Release:	3
+Version:	0.9.2
+Release:	1
 License:	LGPL v2.1+
 Group:		X11/Applications/Multimedia
-Source0:	http://swfdec.freedesktop.org/download/swfdec-mozilla/0.8/%{realname}-%{version}.tar.gz
-# Source0-md5:	716632e0d35b3c1582c180569ba30346
+Source0:	http://swfdec.freedesktop.org/download/swfdec-mozilla/0.9/%{realname}-%{version}.tar.gz
+# Source0-md5:	5e19c365d02f1ece2e7caec13c2b23d4
 URL:		http://swfdec.freedesktop.org/wiki/
 BuildRequires:	autoconf >= 2.58
 BuildRequires:	automake >= 1.6
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.357
-BuildRequires:	swfdec-gtk-devel >= 0.8.0
+BuildRequires:	swfdec-gtk-devel >= 0.9.0
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
 Requires:	browser-plugins >= 2.0
-Requires:	swfdec-gtk >= 0.8.0
+Requires:	swfdec-gtk >= 0.9.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
