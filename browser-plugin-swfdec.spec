@@ -14,11 +14,11 @@ BuildRequires:	automake >= 1.6
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.357
-BuildRequires:	swfdec-gtk-devel >= 0.9.0
+BuildRequires:	swfdec-gtk-devel >= 0.9.2
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
 Requires:	browser-plugins >= 2.0
-Requires:	swfdec-gtk >= 0.9.0
+Requires:	swfdec-gtk >= 0.9.2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
